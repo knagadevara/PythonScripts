@@ -1,0 +1,4 @@
+{ "jsonrpc": "2.0",  "method": "apiinfo.version",  "params": [],"id": 1 }
+
+
+curl -i -X POST -H 'Content-Type:application/json' -d'{"jsonrpc": "2.0","method":"user.authenticate","params":{"user":"Admin","password":"zabbix"},"auth": null,"id":0}' http://192.168.56.104/zabbix/api_jsonrpc.php
