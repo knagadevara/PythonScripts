@@ -1,12 +1,11 @@
 provider "aws" {
-    access_key =    "AKIAJBQNQKK2NG4HBIJQ"
-    secret_key =    "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"
+    access_key =    "${ASKMEID}"
+    secret_key =    "${ASKMEPASS}"
     region =    "ap-south-1"  
 }
 
-resource "aws_s3_bucket" "knagadevara_s3_bucket" {
-    bucket = "knagadevara_s3_bucket"
+resource "aws_s3_bucket" "my_s3_bucket" {
+    bucket = "my_s3_bucket"
     region = "ap-south-1"
     
 }
-

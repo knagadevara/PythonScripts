@@ -1,7 +1,8 @@
 #!/usr/bin/python3
 
-## filter will use a confitional function as a first argument and an iterable for the second argument
-## the function supplied to filter() should return a boolean value ans it will be checked againest the supplied list to it.
+## filter will use a conditional function as a first argument and an iterable for the second argument
+## the function supplied to filter() should return a boolean value and it will be checked against the 
+## supplied list to it.
 
 ## filter(boolien_checker, iterable_list)
 
@@ -23,5 +24,7 @@ xvar = map(lambda sg: "I am the instructor {0}".format(sg) , filter(lambda x : l
 
 #tes = ["I am an Instructor {0}".format(m) for m in mylist if len(m) <= 5 ]
 #print(tes)
-print(xvar)
+print(list(xvar))
 
+## using None in filter
+print(list(filter(None, ['', 'Karthik' , 0 , 1 , None , True , False] )))
