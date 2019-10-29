@@ -1,10 +1,9 @@
-## using sequencing to understand it better of our custom reduce.
+## User defined reducer doesnot support iterables without indexing, hence using a sequence.
 ## redcer function combines the first element with next element on the list
 ## evaluates the function on them, saves the result into the variable.
 ## from now on it would take consider the value saved in the result variable 
 ## and starts to evaluate the function on it with second element.
 from functools import reduce
-
 lst = [1 ,5, 12 ,24, 6, 15]
 glst = ['', 'Karthik' , 0 , 1 , None , True , False]
 Tlst = [True , True , True]
