@@ -1,7 +1,7 @@
-## Shared Closures, refer to the same parent object[variable] in the memory 
-## and if the base variable value changes, so does the referencing dependant variable's everywhere.
-## Closure variables gets evaluated not until the function gets called, the reference always points to the same cell
-## but the value of the cell will be updated to the result of the last function call evaluation.
+## Shared Closures, refer to the same parent object[variable] in the memory and if the base variable value changes, 
+## so does the referencing dependant variable's everywhere unless they are singleton and immutable.
+## Closure variables gets evaluated not until the function gets called, the reference always points to the same cell which further points to
+## a memory location containing the value, That memory location[ inside the cell] will be updated to the result of the last function call evaluation.
 def outer():
     x = 'Sai'
     y = 'Karthik'
@@ -54,12 +54,9 @@ print('Closure values in add3 evaluation Value: {0} , Memory address Hexid: {1} 
 print('Closure values in add1 evaluation Value: {0} , Memory address Hexid: {1} , Evaluation HexId: {2}'.format(add1(11), hex(id(add1)),hex(id(add1(11)))))
 print('Closure values in add1 evaluation Value: {0} , Memory address Hexid: {1} , Evaluation HexId: {2}'.format(add1(11), hex(id(add1)),hex(id(add1(11)))))
 # Closures can also be used in the loops and lambda's
-a = []
-for n in range(1,10):
-    a.append(lambda x: x + n)
 
-print(a[0](1))
-print(a[1](2))
-print(a[2](3))
-print(a[0](1))
-
+def adder():
+    a = []
+    for n in range(1,10):
+        a.append(lambda x, y=n: x + y)
+    return a
