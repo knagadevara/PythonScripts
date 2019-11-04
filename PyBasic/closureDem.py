@@ -1,4 +1,8 @@
 ## closure demo
+## Python sees that there is eference of variable x being called from inside the innner() function.
+## Any variables created in the inner functions or outer functions will exist only till the runtime execution of the function.
+## Unlike the 'closure variables' which creates a 'cell' to store the memory address of the object, its data type and its value.
+## It will be a persistant block even after the eexecution is over, but the referencing and values remain.
 import sys
 def outer():
     x = 'Karthik'
