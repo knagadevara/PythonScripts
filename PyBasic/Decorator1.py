@@ -3,6 +3,8 @@
 ## the main goal here is not to change the signature/defination 
 ## of the original function but to pass it on to another and modify there.
 
+from functools import wraps
+
 ## Example 1
 def func1(fn):
     def func2():
@@ -47,4 +49,38 @@ def family(monm,dad,son):
     return "Hello {} {} {}".format(monm,dad,son)
 
 
-##Example 4 Type enforcing through Decorators
+##Example 4: persisting the function metadata by using 'wraps' decorator
+count1 = dict()
+countToT = 0
+def Counter_Func(funcu):
+    count2 = 0
+    @wraps(funcu)
+    def countMe(*args: 'data type of the passed function arguments', **kwargs ) -> 'data type of the passed function':
+        """
+        This is a generic inner function which can take in *args and **kwargs
+        """
+        global count1 , countToT
+        nonlocal count2
+        count2 += 1
+        count1[funcu.__name__] = count2
+        countToT += 1
+        print("The {0} has been called internally for {1}".format(funcu, count1[funcu.__name__]))
+        print("Total Function Counts {0}".format(countToT))
+        return funcu(*args , **kwargs)
+    return countMe
+
+@Counter_Func
+def addMe(a: int,b: int = 1) -> int:
+    """Simply adds two values"""
+    return a + b
+@Counter_Func
+def mulMe(a: int,b: int = 1 , * , c) -> int:
+    """Simply multiplies three values"""
+    return a * b * c
+
+print(addMe(10, 100))
+print(addMe.__closure__)
+help(addMe)
+print(mulMe(10, c = 3))
+print(mulMe.__closure__)
+help(mulMe)
