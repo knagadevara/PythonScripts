@@ -1,0 +1,46 @@
+### check if x and y both are present in the posted data [jsonified]
+### then check if anyone fo it is a zero 
+### primary check should also analyze the function name isolating div only to zero digit.
+
+1. Comanality is to check if both x and y are present! award status code 301 if one of it is absent
+2. Check if one of the parameter is zero and avoide 'zero division error'
+3. 
+
+if FuncName == 'add' or FuncName == 'sub' or FuncName == 'mul':
+    if x not in postedData or y not in postedData:
+        return 301
+elif FuncName == 'div':
+    if x == 0 or y == 0:
+        return 'Possiblity of a Zero Division Error'
+else:
+    return 200
+    
+def checkData(postedData , FuncName):
+    if 'x' not in postedData or 'y' not in postedData:
+        return 301
+    elif postedData['x'] == 0 or postedData['y'] == 0 and FuncName == 'div':
+        return 302
+    else:
+        return 200
+
+def checkData(postedData , FuncName):
+    if FuncName == 'add' or FuncName == 'sub' or FuncName == 'mul':
+        if 'x' not in postedData or 'y' not in postedData:
+            return 301
+        else:
+            return 200
+    elif FuncName == 'div':
+        if postedData['x'] == 0 or postedData['y'] == 0:
+            return 302
+        else:
+            return 200
+
+def checkData(postedData , FuncName):
+    if 'x' not in postedData or 'y' not in postedData:
+        if FuncName == 'add' or FuncName == 'sub' or FuncName == 'mul':
+            return 301
+    elif FuncName == 'div':
+        if postedData['x'] == 0 or postedData['y'] == 0:
+            return 302
+    else:
+        return 200
