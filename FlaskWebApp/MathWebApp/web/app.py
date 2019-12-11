@@ -1,8 +1,31 @@
 from flask import Flask , jsonify , request
 from flask_restful import Api , Resource
+from pymongo import MongoClient
 
 app = Flask(__name__)
 api = Api(app)
+
+## Establishing the database connection
+DBclient = MongoClient("mongodb://db:27017")
+## Creating a database
+db_house = DBclient.HouseDB
+## Creating a Collection
+house_room = db_house["Room"]
+## Creatig a Document inside Collection
+RoomOcc = house_room.insert(
+   {    
+       "no_of_occupants" : 0
+   } 
+)
+
+
+class No_Mem(Resource):
+    def get(self):
+        ext_mem = house_room.find( {} )[0]["no_of_occupants"]
+        cur_mem = ext_mem + 1
+        house_room.update( {} , {"$set": {"no_of_occupants": cur_mem } } )
+        return "This Page Presently has  {0} Visitors".format(cur_mem)
+
 
 def checkData(postedData , FuncName):
     if FuncName == 'add' or FuncName == 'sub' or FuncName == 'mul':
@@ -92,7 +115,7 @@ class Div(Resource):
 api.add_resource(Add , "/add")
 api.add_resource(Sub , "/sub")
 api.add_resource(Div , "/div")
-
+api.add_resource(No_Mem , "/mem")
 
 
 if __name__=="__main__":

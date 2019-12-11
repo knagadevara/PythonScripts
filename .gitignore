@@ -1,3 +1,6 @@
 desktop.ini
+*.ini
 *.tf
 .git
+*.pyc
+__pycache__

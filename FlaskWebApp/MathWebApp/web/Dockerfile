@@ -1,5 +1,3 @@
-app.py  Dockerfile  requirements.txt
-[root@dockermaster web]# cat Dockerfile
 # Base image
 FROM python:3.7.5-alpine3.9
 WORKDIR /usr/src/app
