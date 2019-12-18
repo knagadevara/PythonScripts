@@ -9,11 +9,7 @@ from flask import Flask , jsonify , request
 from flask_restful import Api , Resource
 from pymongo import MongoClient
 import bcrypt
-# =============================================================================
-# import requests
-# import subprocess
-# import json
-# =============================================================================
+import spacy
 
 app = Flask(__name__)
 api = Api(app)
@@ -56,7 +52,7 @@ def checkUserExists(user_name):
 def ICommentCheckData(postedData):
     global tocken_count
     tocken_count = mycoll.find_one({ "user_name"  : postedData['user_name'] })['token']
-    if 'user_name' not in postedData or 'password' not in postedData or 'sentence' not in postedData:
+    if 'user_name' not in postedData or 'password' not in postedData:
         StatusCode = 304
         Message = "Missing Mandatory Parameters"
         return StatusCode, Message
@@ -119,7 +115,6 @@ class Register(Resource):
                     "last_ name": last_name,
                     "user_name" : user_name,
                     "password" :  hpass,
-                    "sentence" : "",
                     "token" : 10
                 }
             )
@@ -132,57 +127,9 @@ class Register(Resource):
                     }
                 return jsonify(SendResponse)
 
-class iComment(Resource):
-    def post(self):
-        getPostedData = request.get_json()
-        StatusCode, Message = ICommentCheckData(getPostedData)
-        SendResponse = {
-                "Message": Message,
-                "Status Code": StatusCode
-                        }
-
-        if StatusCode != 200:
-            return jsonify(SendResponse)
-        else:
-            user_name = str(getPostedData["user_name"]).strip().lower()
-            password = str(getPostedData["password"]).strip()
-            comment = str(getPostedData["sentence"]).strip()
-#            hashed_password = bcrypt.hashpw(password.encode('utf8'), bcrypt.gensalt())
-            StatusCode = checkCred(user_name , password)
-            if StatusCode != 220:
-                SendResponse = {
-                "Message" : "Authentication Error, Invalid Username or Password",
-                "Status Code" : StatusCode
-                }
-                return jsonify(SendResponse)
-            else:
-                update_result = mycoll.update_one(
-                { "user_name" : user_name } ,
-                {
-                    "$set":
-                    {
-                    "sentence" : comment,
-                    "token" : tocken_count - 1
-                    }})
-            
-            if update_result.acknowledged:
-               SendResponse = {
-                    "Message": Message,
-                    "Status Code": StatusCode,
-                    "Transaction" : "Inserted the given records in the Document"
-                    }
-               return jsonify(SendResponse)
-            
-            else:
-                SendResponse = {
-                    "Message": Message,
-                    "Status Code": StatusCode,
-                    "Transaction" : "There is an Error While Making the Transacttion!!"
-                    }
-                return jsonify(SendResponse)
 
 
-class GetComment(Resource):
+class ReFillCredits(Resource):
     def post(self):
         getPostedData = request.get_json()
         StatusCode = checkCred(getPostedData['user_name'] , getPostedData['password'])
@@ -195,27 +142,78 @@ class GetComment(Resource):
 
         else:
             user_name = str(getPostedData["user_name"]).strip().lower()
-            ## Getting user data
-            sentence = mycoll.find({ "user_name" : user_name })[0]["user_name"]
+            admin_user_name = str(getPostedData["user_name"]).strip().lower()
+            refil_count = int(getPostedData["refil_count"])
+            
+            if admin_user_name == 'Karthik@123':
+                refilled = mycoll.update_one(
+                    { "user_name" : user_name } ,
+                    {
+                        "$set":
+                        {
+                        "token" : tocken_count + refil_count
+                        }})
+                if refilled.acknowledged:
+                    return jsonify(SendResponse)
+                else:
+                    return jsonify(SendResponse)
 
-            mycoll.update_one(
+class ComparePlag(Resource):
+    def post(self):
+        getPostedData = request.get_json()
+        StatusCode = checkCred(getPostedData['user_name'] , getPostedData['password'])
+        if StatusCode != 220:
+            SendResponse = {
+                "Message" : "Authentication Error, Invalid Username or Password",
+                "Status Code" : StatusCode
+                }
+            return jsonify(SendResponse)
+
+        else:
+            user_name = str(getPostedData["user_name"]).strip().lower()
+            comment1 = str(getPostedData["sentence1"]).strip()
+            comment2 = str(getPostedData["sentence1"]).strip()
+            password = str(getPostedData["password"]).strip()
+
+            StatusCode = checkCred(user_name , password)
+            if StatusCode != 220:
+                SendResponse = {
+                "Message" : "Authentication Error, Invalid Username or Password",
+                "Status Code" : StatusCode
+                }
+                return jsonify(SendResponse)
+            else:
+                nlp = spacy.load('en_core_web_sm')
+                text1 = nlp(comment1)
+                text2 = nlp(comment2)
+                ratio = text1.similarity(text2)
+                
+                update_result = mycoll.update_one(
                 { "user_name" : user_name } ,
                 {
                     "$set":
                     {
                     "token" : tocken_count - 1
-                    }})
-               
-            RetVal = {
-                "Your Comments" : sentence,
-                "Message" : "Success",
-                "Status Code": StatusCode                 
-                }
-            return jsonify(RetVal)
-            
+                 }})
+                SendResponse = {
+                    
+                    "Status Code" : StatusCode,
+                    "Message" : "Comparission Successful",
+                    "Ratio" : ratio
+                    }
+                if update_result.acknowledged:   
+                    return jsonify(SendResponse)
+                else:
+                    SendResponse = {
+                    
+                    "Status Code" : StatusCode,
+                    "Message" : "Error",
+                    }
+                    return jsonify(SendResponse)
+
 api.add_resource(Register , "/register")
-api.add_resource(iComment , "/comment")
-api.add_resource(GetComment, "/getcomm")
+api.add_resource(ComparePlag , "/compare")
+api.add_resource(ReFillCredits , "/recharge")
 
 if __name__=="__main__":
     app.run(host='0.0.0.0' , debug=True)
