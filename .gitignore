@@ -2,7 +2,13 @@ desktop.ini
 *.ini
 *.tf
 .git
+..gitignore
 *.pyc
 __pycache__
 .vscode*
+*.spyproject*
+*..spyproject*
 ..spyproject*
+*.tgz
+*.gz
+*.rar
