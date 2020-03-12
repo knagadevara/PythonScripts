@@ -12,3 +12,7 @@ __pycache__
 *.tgz
 *.gz
 *.rar
+*.xml
+/.ipynb_checkpoints*
+.ipynb_checkpoints/*
+*.log
