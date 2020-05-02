@@ -42,7 +42,10 @@ try:
         temp = round(temp - 273.15 , 2)
         feels_like = round(feels_like - 273.15 , 2)
         return "Temperature in {2} : {0}\nBut it feels Like: {1}\nSunrise: {3}\nSunset: {4}".format(temp, feels_like, pName , sunrise , sunset)
-except NameError as err:
+except Exception as err:
     print(err)
 else:
-    print(convertMe())
+    try:
+        print(convertMe())
+    except NameError as err:
+        print(err)
