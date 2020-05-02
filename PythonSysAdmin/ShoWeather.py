@@ -22,21 +22,27 @@ arguments = parseme.parse_args()
 ### api.openweathermap.org/data/2.5/weather?zip={zip code},{country code}&appid={your api key} - by ZipCode
 
 weatherURL2 = 'http://api.openweathermap.org/data/2.5/weather?zip={0},{1}&appid={2}'.format(arguments.zipcode , arguments.country , os.getenv('OWM_API_KEY'))
-req1 = requests.get(weatherURL2 ,  timeout=10)
-if req1.status_code != 200:
-    print("Unable to retrive link, please check the passed data and API_KEY")
+try:
+    req1 = requests.get(weatherURL2 ,  timeout=10)
+except Exception as err:
+    print(err)
 else:
-    J_weather = req1.json()
+    if req1.status_code != 200:
+        print("Unable to retrive link, please check the passed data and API_KEY")
+    else:
+        J_weather = req1.json()
 
-def convertMe():
-    temp = int(J_weather['main'].get('temp'))
-    feels_like = int(J_weather['main'].get('feels_like'))
-    pName = J_weather.get('name')
-    sunrise = strftime('%Y-%B-%d %H:%M:%S', localtime(J_weather['sys'].get('sunrise')))
-    sunset = strftime('%Y-%B-%d %H:%M:%S', localtime(J_weather['sys'].get('sunset')))
-    temp = round(temp - 273.15 , 2)
-    feels_like = round(feels_like - 273.15 , 2)
-
-    return "Temperature in {2} : {0}\nBut it feels Like: {1}\nSunrise: {3}\nSunset: {4}".format(temp, feels_like, pName , sunrise , sunset)
-
-print(convertMe())
+try:
+    def convertMe():
+        temp = int(J_weather['main'].get('temp'))
+        feels_like = int(J_weather['main'].get('feels_like'))
+        pName = J_weather.get('name')
+        sunrise = strftime('%Y-%B-%d %H:%M:%S', localtime(J_weather['sys'].get('sunrise')))
+        sunset = strftime('%Y-%B-%d %H:%M:%S', localtime(J_weather['sys'].get('sunset')))
+        temp = round(temp - 273.15 , 2)
+        feels_like = round(feels_like - 273.15 , 2)
+        return "Temperature in {2} : {0}\nBut it feels Like: {1}\nSunrise: {3}\nSunset: {4}".format(temp, feels_like, pName , sunrise , sunset)
+except NameError as err:
+    print(err)
+else:
+    print(convertMe())
