@@ -13,7 +13,7 @@ import os, sys, argparse, requests , json
 from time import strftime, localtime
 
 parseme = argparse.ArgumentParser(prog='ShoWeather' , description= 'Shows Whether of the required country and zipcode' )
-parseme.add_argument('--zipcode' , '-z' , type = int , required = True , help = ' - z <zipcode>')
+parseme.add_argument('--zipcode' , '-z' , type = str , required = True , help = ' - z <zipcode>')
 parseme.add_argument('--country' , '-c' , type = str , default = 'US' , help = '-c <US>')
 
 arguments = parseme.parse_args()
@@ -30,7 +30,12 @@ else:
     if req1.status_code != 200:
         print("Unable to retrive link, please check the passed data and API_KEY")
     else:
-        J_weather = req1.json()
+        try:
+            J_weather = req1.json()
+        except NameError as err:
+            print(err)
+        else:
+            print('Created Object J_Meter')
 
 try:
     def convertMe():
