@@ -3,16 +3,22 @@ from pgDBbkp import cli
 
 url = 'postgres://ted:password@example.com:5432/db_one'
 
-def test_parser_without_driver():
-    """ Program Exits Without a DRIVER """
-    parser = cli.create_parser()
+@pytest.fixture()
+def parser():
+    return cli.create_parser()
+
+def test_parser_without_driver(parser):
+    """ Program Exits Without a DRIVER and DESTINATION """
     with pytest.raises(SystemExit):
         parser.parse_args([url])
 
-def test_parser_without_destination():
+def test_parser_without_destination(parser):
     """ Program Exits With DRIVER But Without a DESTINATION """
-    parser = cli.create_parser()
-    with pytest.raises(SystemExit):
-        parser.parse_args([url, '--driver' , 'local'])
+    for driver in ['local' , 'remote' , 's3']:
+        with pytest.raises(SystemExit):
+            parser.parse_args([url, '--driver' , driver])
 
-#def test_parser_with_driver_destination():
+def test_parser_without_destination(parser):
+    """ Program Exits Without DRIVER But With a DESTINATION """
+    with pytest.raises(SystemExit):
+        parser.parse_args([url, '--driver' , '/some/path'])
