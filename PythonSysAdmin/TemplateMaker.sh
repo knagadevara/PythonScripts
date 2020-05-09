@@ -32,13 +32,13 @@ function usage()
 
 function checkFrmt(){
 if [[ $lang == 'python' ]] ; then
-  sbang="#!$(which python3)"
+  sbang="#!/usr/bin/env python"
   ext='py'
 elif [[ $lang == 'bash' ]] ; then
-  sbang="#!$(which bash)"
+  sbang="#!/usr/bin/env bash"
   ext='sh'
 elif [[ $lang == 'ruby' ]] ; then
-  sbang="#!$(which  ruby)"
+  sbang="#!/usr/bin/env ruby"
   ext='rb'
 else
   flg=3
