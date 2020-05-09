@@ -15,7 +15,7 @@ parse_drivers = ['local' , 'remote' , 's3']
 class DriverAction(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
         driver, destination = values
-        if driver.lower() in parse_drivers:
+        if driver.lower() not in parse_drivers:
             parser.error("Unknown driver given")
         else:
             namespace.driver = driver.lower()
@@ -24,8 +24,8 @@ class DriverAction(argparse.Action):
 
 def create_parser():
     parser = argparse.ArgumentParser(prog='pgDBbkp', description=""" Backup PostgreSQL DB locally or to AWS S3 """)
-    parser.add_argument('--url', '-u' , help='URL for the DB to backup' , type= str)
-    parser.add_argument('--driver', '-d' , type= str ,
+    parser.add_argument('--url' , help='URL for the DB to backup' , type= str)
+    parser.add_argument('--driver',  type= str ,
     help='type of driver and destination should be provided' , nargs=2,
     action=DriverAction, required=True)
-    return
+    return parser
