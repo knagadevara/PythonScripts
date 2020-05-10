@@ -9,8 +9,11 @@
 
 #--- --- --- --- --- --- --- --- --- ---##--- --- --- --- --- --- --- --- --- ---#
 
-from subprocess import Popen, PIPE
-
-def dump():
-    Popen(['pg_dump' , url] , stdout=PIPE)
-    return url
+import subprocess
+import sys
+def dump(url):
+    try:
+        return subprocess.Popen(['pg_dump' , url] , stdout=subprocess.PIPE)
+    except OSError or SystemError as err:
+        print(err)
+        sys.exit(2)
