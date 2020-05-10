@@ -22,5 +22,10 @@ setup(  name='pgDBbkp',
         author_email='vnsk.1991@gmail.com',
         packages=find_packages('src'),
         package_dir={'':'src'},
-        install_requires=[]
+        install_requires=['boto3'],
+        entry_points={
+            'console_scripts': [
+                'pgDBbkp = pgDBbkp.main:main',
+            ]
+        }
     )
