@@ -13,3 +13,6 @@ def locally(INfile,OUTfile):
     OUTfile.write(INfile.read())
     OUTfile.close()
     INfile.close()
+
+def s3AWS(botoS3_client, INfile , bucketName , OUTfile):
+    return botoS3_client.upload_fileobj(INfile , bucketName , OUTfile)
