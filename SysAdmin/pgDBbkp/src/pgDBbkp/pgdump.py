@@ -11,9 +11,10 @@
 
 import subprocess
 import sys
+
 def dump(url):
     try:
         return subprocess.Popen(['pg_dump' , url] , stdout=subprocess.PIPE)
-    except OSError or SystemError as err:
+    except (OSError , SystemError) as err:
         print(err)
         sys.exit(2)
