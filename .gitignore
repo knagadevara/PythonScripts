@@ -17,6 +17,7 @@ __pycache__
 .ipynb_checkpoints/*
 *.log
 *.code*
+*.iml
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
