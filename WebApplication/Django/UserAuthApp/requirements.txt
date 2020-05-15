@@ -1,0 +1,15 @@
+django == 2.2
+coreapi
+pytz
+sqlparse
+south
+djangorestframework
+django-filter
+dj-database-url
+django-cache-url
+django-debug-toolbar
+django-allauth
+django-avatar
+django-crispy-forms
+django-braces
+django-guardian

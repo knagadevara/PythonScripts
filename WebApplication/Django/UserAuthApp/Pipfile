@@ -1,0 +1,26 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+
+[packages]
+coreapi = "*"
+pytz = "*"
+sqlparse = "*"
+djangorestframework = "*"
+django-filter = "*"
+dj-database-url = "*"
+django-cache-url = "*"
+django-debug-toolbar = "*"
+django-allauth = "*"
+django-avatar = "*"
+django-crispy-forms = "*"
+django-braces = "*"
+django-guardian = "*"
+Django = "==2.2"
+South = "*"
+
+[requires]
+python_version = "3.6"
