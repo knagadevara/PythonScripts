@@ -36,3 +36,8 @@ python manage.py runserver 0.0.0.0:8000 ## Runs the server but accepts connectio
     <app-name>/migrations/0001_initial.py
     - Create model <the class which is given in settings.py>
 => To setup the created migration on to a DB
+
+=> to make the model available to users, add it in admin.py
+from profiles_api import models
+# Register your models here.
+admin.site.register(models.UserProfile)
