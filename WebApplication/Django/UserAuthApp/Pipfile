@@ -19,8 +19,8 @@ django-avatar = "*"
 django-crispy-forms = "*"
 django-braces = "*"
 django-guardian = "*"
-Django = "==2.2"
 South = "*"
+django = "*"
 
 [requires]
 python_version = "3.6"
