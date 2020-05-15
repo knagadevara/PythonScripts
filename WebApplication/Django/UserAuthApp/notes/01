@@ -1,0 +1,38 @@
+Flow of working
+===============
+
+=>Created the main base admin/management files for the application
+django-admin startproject profiles_project .
+
+=>Created the application using manage.py
+python manage.py startapp profiles_api
+
+=> Added teh application to enable their functionality in django server by adding them to setting.py 'INSTALLED_APPS' variable.
+
+=> testing the new configuration by starting the django server.
+python manage.py runserver ### runs the server but accepts connections only from localhost enviornment.
+python manage.py runserver 0.0.0.0:8000 ## Runs the server but accepts connections from all over.
+
+=> At this point only the page is available but the DB is not ready, to enable DB auth functionality create a model.
+=> To override the default functionality of Djangeo Users modes create a new modes 'UserProfile'
+=> to make use of and map the UserProfile model created a UserProfileManager model which inherits from BaseUserManager
+
+    ## Custome userprofile manager to override the default
+    objects = UserProfileManager() # to call
+    # Overriding the default username field to email
+    USERNAME_FIELD = 'email' # overriding the primary Key and login
+    ## required field
+    REQUIRED_FIELDS = [ 'username', 'first_name' , 'last_name' ] # Other Mandatory fields
+
+=> To enable the created model and tell Django to use it for authentication, it has to be written in setengs.py 
+   # Overriding the default model at variable  AUTH_USER_MODEL = 'appname.authenticationClass'
+
+=> Dango created tables and manages authentications through migrations, So initially or if any change is made to the database tables
+    # it is required to make migrations tii create or update the existing
+    python manage.py makemigrations <app-name>
+
+    Output:
+    Migrations for '<app-name>':
+    <app-name>/migrations/0001_initial.py
+    - Create model <the class which is given in settings.py>
+=> To setup the created migration on to a DB
