@@ -69,7 +69,7 @@ class UserProfile(AbstractBaseUser , PermissionsMixin):
     REQUIRED_FIELDS = [ 'username', 'first_name' , 'last_name' ]
 
     def get_FullName(self):
-        return '{1} {0}'.format(self.first_Name , self.username)
+        return '{1} {0}'.format(self.first_name , self.username)
 
     def ger_UserEmailAddress(self):
         return self.email
