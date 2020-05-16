@@ -14,8 +14,11 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
-
+from django.urls import path , include
+## imported django.urls.include, read the above description for more details.
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/' , include('profiles_api.urls'))
 ]
+
+## the requests that begin with "api/" will be forwarded to 'profiles_api.urls'
