@@ -1,0 +1,11 @@
+=> creating and adding a APiView
+Class should be created in <app-name>/views.py to which HTTP supported methods are added where logic is writtten.
+
+=> Now, the created class has to be included at urls.py in the root of the project directory(where settings.py resides), 
+which becomes the entry-point to all the requests that come to oue custom defined applications in our case profiles_api
+
+=> Serializer converts raw data into jSON format while saving the it or persisting it, very similar to Django Forms.
+    # Custom serialiser has to be mapped with the class(endpoint)
+    serializer_class = serializers.HelloSerializer
+    # To retrieve data and validate it from passed requests
+    variable123 = serializer_hello.validated_data.get('<variable name given in <app-name>/serializers.py>')
