@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status , viewsets
 
 from profiles_api import serializers
 
@@ -36,10 +36,30 @@ class HelloAPIView(APIView):
             ## returning the errors if serializer_hello is not as per the defined rules in serializers.py
             ## returning the HTTP status
             return Response(serializer_hello._errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def put(self, request , pk=None):
+        return Response({'method' : 'PUT'})
+
+    def patch(self, request , pk=None):
+        return Response({'method' : 'PATCH'})
+
+    def delete(self, request , pk=None):
+        return Response({'method' : 'DELETE'})
             
 
-    
-    
+class HelloViewSet(viewsets.ViewSet):
+    """ Test ViewSet """
 
+    def list(self, request):
+        """ lists the features of APIvIEWSEt"""
 
-     
+        a_viewset = [
+            'Uses Actions (LIST,CREATE,RETRIEVE,UPDATE,PARTIAL_UPDATE)',
+            'Automatic mapping using URL Routers',
+            'Provides more functionality with less code'
+
+        ]
+        return Response({'message': 'Hello!', 'ViewSet' : a_viewset})
+    
+                
+    
