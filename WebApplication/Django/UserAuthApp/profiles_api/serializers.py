@@ -11,9 +11,9 @@ class HelloSerializer(serializers.Serializer):
 class UserProfileSerializer(serializers.ModelSerializer):
     """ Serializes the UserProfile object """
     ## defining a metaclass to Configure a sprcific models.UserProfile to created serializer
-    class Meta:
+    class Meta():
         """ sets out the class to point at the UserProfile model """
-        umodel = models.UserProfile
+        model = models.UserProfile
         ## Specify the fields that are to be used/accessable by the umodel serializer to API endpoint.
         ## Creating a Tuple [ as it is immutable ] of fields available in the model/db
         fields = ('id' , 'email' , 'username' , 'password' , 'first_name' , 'last_name')
@@ -40,10 +40,3 @@ class UserProfileSerializer(serializers.ModelSerializer):
         )
 
         return user
-
-
-
-
-
-
-
