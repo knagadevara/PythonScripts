@@ -2,7 +2,6 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status , viewsets
-
 from profiles_api import serializers
 
 class HelloAPIView(APIView):
@@ -49,6 +48,8 @@ class HelloAPIView(APIView):
 
 class HelloViewSet(viewsets.ViewSet):
     """ Test ViewSet """
+    
+    serialiser_class = serializers.HelloSerializer
 
     def list(self, request):
         """ lists the features of APIvIEWSEt"""
@@ -60,6 +61,27 @@ class HelloViewSet(viewsets.ViewSet):
 
         ]
         return Response({'message': 'Hello!', 'ViewSet' : a_viewset})
+
+    def create(self, request):
+        """ Retrive the data provided in the request through serialization and validate it """
+        request_data = self.serialiser_class(data=request.data)
+        if request_data.is_valid():
+            name = request_data.validated_data.get('name')
+            message = f'Hello! {name}'
+            return Response({'message': message})
+        else:
+            return Response(request_data.errors,status=status.HTTP_400_BAD_REQUEST)
     
-                
+    def retrieve(self,request, pk=None):
+        """ Retrieves an object with matched id """
+        return Response({'http_method' : 'GET'})
     
+    def update(self, request,pk=None):
+        """ Overwites the old value """
+        return Response({'http_method':'PUT'})
+    
+    def partial_update(self, request,pk=None):
+        return Response({'http_method':'PATCH'})
+    
+    def destroy(self, request, pk=None):
+        return Response({'http_method':'DELETE'})
