@@ -3,7 +3,10 @@ from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.models import BaseUserManager
 
-## importing most of the functionality with BaseUserManager
+## importing custom classes
+from profiles_project import settings
+
+## importing most of the functionality from BaseUserManager
 class UserProfileManager(BaseUserManager):
     """ Custome Manager for User Profiles Overiding the System defined parameters, which makes Django to interact with the fields """
 
@@ -69,7 +72,7 @@ class UserProfile(AbstractBaseUser , PermissionsMixin):
     REQUIRED_FIELDS = [ 'username', 'first_name' , 'last_name' ]
 
     def get_FullName(self):
-        return '{1} {0}'.format(self.first_name , self.username)
+        return 'username: {0} | email: {1}'.format(self.username, self.email)
 
     def ger_UserEmailAddress(self):
         return self.email
@@ -77,3 +80,19 @@ class UserProfile(AbstractBaseUser , PermissionsMixin):
     def __str__(self):
         """ Returns the string representation of the User """
         return self.get_FullName()
+
+## creates an object ans associate the item with the user who created it
+class ProfileFeedItem(models.Model):
+    """ Profile Status update """
+    ## linking this model with UserProfile with the help of foregien key
+    ## But we are not hardcoding a method instead pointing it to settings.AUTH_USER_MODEL attribute 
+    user_profile = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        ## removes the feed item if the user is deleted
+        on_delete=models.CASCADE)
+    status_text = models.CharField(max_length=255)
+    created_on = models.DateTimeField(auto_now_add=True)
+
+    ## Object when called returns the string representation 
+    def __str__(self):
+        return self.status_text
