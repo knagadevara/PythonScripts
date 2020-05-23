@@ -1,8 +1,14 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status , viewsets
-from profiles_api import serializers , models
+from rest_framework.settings import api_settings
+from rest_framework import status , viewsets , filters
+## To Generate and obtain Authentication Token
+from rest_framework.authtoken.views import ObtainAuthToken
+## Allows users to authenticate with the api
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
+## Application classes
+from profiles_api import serializers , models , permissions
 
 class HelloAPIView(APIView):
     """ Test api View, application logic for the endpoint will be defined """
@@ -89,5 +95,20 @@ class HelloViewSet(viewsets.ViewSet):
 class UserProfileViewSet(viewsets.ModelViewSet):
     """ Handle creating and updating profiles """
     serializer_class = serializers.UserProfileSerializer
+    ## Queryset is enabled on all the classes/methods in models.py
     queryset = models.UserProfile.objects.all()
+    ## adding the type of functionality to authenticate
+    authentication_classes = (TokenAuthentication, SessionAuthentication, BasicAuthentication,)
+    ## Adding permissions
+    permission_classes = (permissions.UpdateOwnProfile,)
+    ## Filtering functionality
+    filters_backend = (filters.SearchFilter,)
+    search_fields = ('username' , 'email',)
+#    render_classes = api_settings.DEFAULT_RENDERER_CLASSES
+
+class UserLoginApiView(ObtainAuthToken):
+    """ Handle creation of Authentication Token """
+    ## The way to aquire the credentials are example: curl -X POST  -d "username=wer21@cba.com&password=54321"  http://localhost:8000/api/login/
+    render_classes = api_settings.DEFAULT_RENDERER_CLASSES
+    
 
