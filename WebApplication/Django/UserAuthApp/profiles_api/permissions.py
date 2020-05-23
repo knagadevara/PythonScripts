@@ -14,3 +14,10 @@ class UpdateOwnProfile(permissions.BasePermission):
             return True      
         ## Evaluates if the id is same as the id of row where the firelds are changing
         return obj.id == request.user.id
+
+class UpdateOwnFeedItem(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+            return True      
+        ## Evaluates if the id is same as the id of row where the firelds are changing
+        return obj.user_profile.id == request.user.id
