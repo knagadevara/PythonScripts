@@ -7,8 +7,10 @@ from profiles_api import views
 router = DefaultRouter()
 router.register('hello_viewset' , views.HelloViewSet , basename='hello_viewset')
 router.register('profile' , views.UserProfileViewSet)
+#router.register('login' , views.UserLoginApiView , basename='profile')
 
 urlpatterns = [
     path('hello_api/' , views.HelloAPIView.as_view()),
+    path('login/', views.UserLoginApiView.as_view()),
     path('' , include(router.urls))
 ]
