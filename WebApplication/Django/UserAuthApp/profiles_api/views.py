@@ -7,6 +7,8 @@ from rest_framework import status , viewsets , filters
 from rest_framework.authtoken.views import ObtainAuthToken
 ## Allows users to authenticate with the api
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
+##
+from rest_framework.permissions import IsAuthenticated
 ## Application classes
 from profiles_api import serializers , models , permissions
 
@@ -91,14 +93,14 @@ class HelloViewSet(viewsets.ViewSet):
     
     def destroy(self, request, pk=None):
         return Response({'http_method':'DELETE'})
-
+### , SessionAuthentication, BasicAuthentication,
 class UserProfileViewSet(viewsets.ModelViewSet):
     """ Handle creating and updating profiles """
     serializer_class = serializers.UserProfileSerializer
     ## Queryset is enabled on all the classes/methods in models.py
     queryset = models.UserProfile.objects.all()
     ## adding the type of functionality to authenticate
-    authentication_classes = (TokenAuthentication, SessionAuthentication, BasicAuthentication,)
+    authentication_classes = (TokenAuthentication,)
     ## Adding permissions
     permission_classes = (permissions.UpdateOwnProfile,)
     ## Filtering functionality
@@ -110,5 +112,15 @@ class UserLoginApiView(ObtainAuthToken):
     """ Handle creation of Authentication Token """
     ## The way to aquire the credentials are example: curl -X POST  -d "username=wer21@cba.com&password=54321"  http://localhost:8000/api/login/
     render_classes = api_settings.DEFAULT_RENDERER_CLASSES
-    
 
+## Communicates with database do inheriting Modelviewset
+## SessionAuthentication, BasicAuthentication, is removed for now
+class UserProfileFeedItemViewSet(viewsets.ModelViewSet):
+    """ Handels creating, reading and updating profiles feed item """
+    serializer_class = serializers.ProfileFeedItemSerializer
+    authentication_classes = (TokenAuthentication, )
+    permission_classes = (permissions.UpdateOwnFeedItem, IsAuthenticated)
+    queryset = models.ProfileFeedItem.objects.all()
+
+    def perform_create(self, serializer):
+        serializer.save(user_profile=self.request.user)
