@@ -1,0 +1,95 @@
+To check the rows in Employee table in company_2020 database
+psql postgres://knagadevara:Sai1991@127.0.0.1:5432/company_2020 -c "SELECT COUNT(id) FROM employees"
+DROP TABLE IF EXISTS "public"."purchases";
+CREATE TABLE "public"."purchases" (
+	"id" int4 NOT NULL,
+	"item_id" int4,
+	"customer_id" int4
+)
+WITH (OIDS=FALSE);
+
+ALTER TABLE "public"."purchases" ADD PRIMARY KEY ("id") NOT DEFERRABLE INITIALLY IMMEDIATE;
+ALTER TABLE "public"."purchases" ADD CONSTRAINT "fk_customer_purchase" FOREIGN KEY ("customer_id") REFERENCES "public"."customers" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION NOT DEFERRABLE INITIALLY IMMEDIATE;
+ALTER TABLE "public"."purchases" ADD CONSTRAINT "fk_purchase_item" FOREIGN KEY ("item_id") REFERENCES "public"."items" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION NOT DEFERRABLE INITIALLY IMMEDIATE;
+
+
+SELECT * FROM "public"."customers" WHERE customers.first_name = 'Rolf' OR customers.last_name = 'Smith';
+SELECT * FROM "public"."customers" WHERE customers.first_name = 'Rolf' AND customers.last_name = 'Watson';
+SELECT * FROM "public"."items";
+
+# UPDATE <TABLE-NAME> SET <COLUMN-NAME=NEW-VALUE> WHERE <COLUMN-NAME=VALUE-MATCH>;
+
+UPDATE items SET price=5 WHERE price = '3.50';
+DELETE FROM items WHERE id=4;
+# DDangerous to use UPDATE/DELETE without WHERE clause.
+
+## Wild Cards '_' replaces single element , '%' replaces complete element
+SELECT * FROM customers WHERE last_name LIKE 'A%';
+SELECT * FROM customers WHERE last_name LIKE '%t_';
+
+## Joins
+## Inner Join selects rows from table1 and table2 where they match the selecting COLUMN
+SELECT * FROM customers INNER JOIN purchases ON customers.id = purchases.id;
+
+## Joining Three or more tables
+SELECT * FROM 
+<TABLE1> INNER JOIN <TABLE2> ON <TABLE1>.matching-column = <TABLE2>.matching-column
+INNER JOIN <TABLE3> ON <TABLE2>.matching-column = <TABLE3>.matching-column;
+
+## Group By
+SELECT * FROM <TABLE1> INNER JOIN <TABLE2> ON <TABLE1>.matching-column = <TABLE2>.matching-column GROUP BY <TABLE1>.columnName;
+# Always remember that the count only works on the second table column and group-by works on first table item. Example:
+SELECT customers.first_name , customers.last_name , COUNT(purchases.customer_id) FROM customers INNER JOIN purchases ON customers.id = purchases.customer_id GROUP BY customers.id ;
+SELECT items.name as "Product_Name" , COUNT(purchases.customer_id) AS "Customers_Bought" FROM ITEMS INNER JOIN purchases ON purchases.item_id = items.id GROUP BY items.id ;
+
+
+## Howmuch did each of the customer has spent on howmany items?
+SELECT customers.first_name AS "Cust_FirstName" , customers.last_name AS "Cust_LastName" , 
+SUM(items.price) AS "Cust_Expenditure" , COUNT(purchases.item_id) AS "Quantity"
+FROM customers INNER JOIN purchases ON customers.id = purchases.customer_id
+INNER JOIN items ON purchases.item_id = items.id 
+GROUP BY customers.id 
+ORDER BY 3 DESC
+LIMIT 3;
+
+## How much did each of the item made business
+SELECT ITEMS.NAME AS "ITEM_NAME" , COUNT(purchases.item_id) AS "ITEMS_SOLD" , SUM(items.price) AS "TOTAL_BUSINESS" 
+FROM ITEMS INNER JOIN PURCHASES ON purchases.item_id = items.id
+GROUP BY items.id;
+
+## hOW MUCH BUSINESS DID WE DO
+SELECT SUM(items.price) AS "TOTAL_SPENDINGS" , COUNT(purchases.item_id) AS "ITEMS_SOLD"
+FROM ITEMS INNER JOIN PURCHASES ON purchases.item_id = items.id;
+
+## Syntax to create a table
+CREATE TABLE <SCHEMA>.<TABLE_NAME>
+(
+	column_name <TYPE>,
+	column_2 TYPE REFERENCES <SCHEMA>.<OTHER_TABLE_NAME>
+	CONSTRAINT <constraint_name> <constraint-type> (column_name)
+
+)
+
+If there is a dependency relation of this table to other 
+tables like forigen key, it would throw error while droping a table.
+by default "DROP TABLE" will run in RESTRICT mode, this can be override
+by using CASCADE, which deletes the F_KEY relationship/referrencing only
+but not the underlaying dependant tables will not be deleted.
+
+DROP TABLE/VIEW/SEQUENCE IF EXISTS public.customers; 
+###will detelte the table but not data, if table exists.
+CREATE TABLE public.customers
+(
+	id INTEGER NOT NULL,
+	username CHARACTER VARYING(78) NOT NULL,
+	first_name CHARACTER VARYING(100) NOT NULL,
+	last_name CHARACTER VARYING(200),
+	CONSTRAINT customers_pkey PRIMARY KEY (id , username)
+)
+
+CREATE TABLE public.videos 
+(
+	id INTEGER NOT NULL,
+	customer_id INTEGER REFERENCES public.customers,
+	title CHARACTER VARYING(255) NOT NULL,
+)
