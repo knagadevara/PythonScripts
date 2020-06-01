@@ -93,3 +93,28 @@ CREATE TABLE public.videos
 	customer_id INTEGER REFERENCES public.customers,
 	title CHARACTER VARYING(255) NOT NULL,
 )
+
+INSERT
+
+With columm specificities,can input one to multiple fields.
+INSERT INTO <schema>.<table_name>(col1_name,col2_name ...coln_name) VALUES (col1_type_value,col2_type_value) ;
+
+Without column specification, but the caveat is all the values are positional and field input should be complete
+INSERT INTO <schema>.<table_name> VALUES (col1_type_value,col2_type_value) ;
+ 
+INDEX: makes searching easy and fast when compared to traditional method of searching from table.
+takes disk space, have to update if any of the values get updated.
+Primary key is an index by default
+
+Syntax:
+CREATE INDEX <index_name> ON <schema>.<table_name>(col1_name) --> always recomended to create seperate indexes for each column
+CREATE INDEX <index_name> ON <schema>.<table_name>(col1_name, col2_name)
+
+To rectify a corrupted index,
+REINDEX INDEX <index_name> ;
+REINDEX TABLE <schema>.<table_name> ; --> Builds all the indexes in the table
+
+Tell the Database not to use any indicies and start it, then rebuild all the indexes
+REINDEX  DATABASE <schema> ; --> Builds all the indexes in the database
+
+
