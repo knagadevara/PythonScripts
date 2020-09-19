@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-read -p "Postgres user name: " name
-read -s -p "Postgres user password: " password
-POSTGRES_USER=name
-POSTGRES_PASSWORD=password
+#read -p "Postgres user name: " name
+#read -s -p "Postgres user password: " password
+POSTGRES_USER="knagadevara"
+POSTGRES_PASSWORD="Sai1991"
 POSTGRES_DB="company_2020"
 container_Name="postgres"
 
