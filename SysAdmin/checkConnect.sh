@@ -2,18 +2,18 @@
 
 myPATH='/tmp'
 fileLOC="${1}"
-PingHOST="ping -c 4 -w 3"
+PingHOST="ping -c 4 -w 4"
 OutFile="${myPATH}/PingOutput.txt"
-UsageDialog="This tool will only take single parameter, multiple given, please find the below USAGE.\n\t:./${0} <Path to HostsFile>"
+UsageDialog="This tool will only take single parameter, please find the below USAGE:\n\n\t ${0} <Path to HostsFile>\n"
 
 
-if [[ ${#} > 1 ]]
+if [[ ${#} -ne 1 ]]
 then
 echo -e ${UsageDialog}
 exit 1
 fi
 
-if [[ -f "${myPATH}/${fileLOC}" ]]
+if [[ ! -f "${myPATH}/${fileLOC}" ]]
 then
 echo "File not there"
 exit 2
@@ -25,14 +25,19 @@ for NewHosts in $( cat "${myPATH}/${fileLOC}" )
 
 do
 
-${PingHOST} ${NewHosts} 2 >/dev/null
-PingStatus=$?
+${PingHOST} ${NewHosts} &>/dev/null
 
-if [[ $PingStatus > 0 ]]
+PingStatus=`echo $?`
+
+echo $PingStatus
+
+if [ $PingStatus -eq 0 ]
+
 then
 echo "${NewHosts} Network-PING SUCCESS" >> ${OutFile}
 else
 echo "${NewHosts} Network-PING FAILED" >> ${OutFile}
+
 fi
 
 done
