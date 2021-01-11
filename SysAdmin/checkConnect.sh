@@ -2,7 +2,7 @@
 
 myPATH='/tmp'
 fileLOC="${1}"
-PingHOST="ping -c 4 -w 4"
+PingHOST="ping -c 4 -w 10"
 OutFile="${myPATH}/PingOutput.txt"
 UsageDialog="This tool will only take single parameter, please find the below USAGE:\n\n\t ${0} <Path to HostsFile>\n"
 
@@ -27,9 +27,12 @@ for NewHosts in $( cat "${myPATH}/${fileLOC}" )
 	PingStatus=`echo $?`
 	if [[ $PingStatus -eq 0 ]]
 		then
-			echo "${NewHosts} Network-PING SUCCESS" >> ${OutFile}
+			echo "${NewHosts} PING SUCCESS" >> ${OutFile}
+		elif [[ $PingStatus -eq 2 ]]
+		then
+			echo "${NewHosts} DNS FAILED" >> ${OutFile}
 		else
-			echo "${NewHosts} Network-PING FAILED" >> ${OutFile}
+			echo "${NewHosts} PING FAILED" >> ${OutFile}
 	fi
 done
 
